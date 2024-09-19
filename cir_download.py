@@ -39,12 +39,34 @@ def search():
                 for link in links:
                     try:
                         href_value = link.get_attribute('href')
-                        print(href_value)
+                        print(f"Found link: {href_value}")
+
+                        # 點擊該連結並等待新標籤頁打開
                         link.click()
-                        time.sleep(5)
+
+                        # 動態等待新標籤頁打開後進行切換
+                        WebDriverWait(driver, 10).until(
+                            EC.number_of_windows_to_be(2)  # 等待新標籤頁打開（總標籤頁數應為2）
+                        )
+
+                        # 切換到新打開的標籤頁
+                        windows = driver.window_handles  # 獲取所有標籤頁
+                        driver.switch_to.window(windows[-1])  # 切換到最新的標籤頁
+                        print(f"Switched to new tab with title: {driver.title}")
+
+                        # 等待新標籤頁完全加載
+                        WebDriverWait(driver, 10).until(
+                            EC.presence_of_element_located((By.TAG_NAME, 'body'))  # 確保新標籤頁主體加載
+                        )
+
+                        # 操作新標籤頁後關閉它，並返回原始標籤頁
+                        driver.close()
+                        driver.switch_to.window(windows[0])  # 切回到原標籤頁
+
                     except StaleElementReferenceException:
                         print("StaleElementReferenceException: 重新查找超連結元素")
                         continue  # 如果元素已經無效，則跳過繼續下個元素
+
 
             except (NoSuchElementException, TimeoutException) as e:
                 print(f"處理元素 {index + 1} 時發生錯誤: {e}")
