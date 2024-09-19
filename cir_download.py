@@ -4,7 +4,7 @@ from selenium.common.exceptions import NoSuchElementException, StaleElementRefer
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
-import requests
+
 def search():
     driver = webdriver.Chrome()
     try:
@@ -58,7 +58,16 @@ def search():
                         WebDriverWait(driver, 10).until(
                             EC.presence_of_element_located((By.TAG_NAME, 'body'))  # 確保新標籤頁主體加載
                         )
+                        # 查找所有 href 包含 'view-attachment' 的 <a> 標籤
+                        link_elements = driver.find_elements(By.XPATH, "//a[contains(@href, 'view-attachment')]")
 
+                        # 打印找到的元素數量
+                        print(f"Found {len(link_elements)} elements with 'view-attachment' in href.")
+                        
+                        # 打印這些元素的 href 屬性
+                        for attachment_link in link_elements:
+                            print(f"Attachment Link: {attachment_link.get_attribute('href')}")
+                            
                         # 操作新標籤頁後關閉它，並返回原始標籤頁
                         driver.close()
                         driver.switch_to.window(windows[0])  # 切回到原標籤頁
@@ -66,7 +75,6 @@ def search():
                     except StaleElementReferenceException:
                         print("StaleElementReferenceException: 重新查找超連結元素")
                         continue  # 如果元素已經無效，則跳過繼續下個元素
-
 
             except (NoSuchElementException, TimeoutException) as e:
                 print(f"處理元素 {index + 1} 時發生錯誤: {e}")
