@@ -73,7 +73,6 @@ def search():
             try:
                 # 點擊當前元素
                 element.click()
-
                 # 等待頁面主體重新加載
                 WebDriverWait(driver, 10).until(
                     EC.presence_of_element_located((By.TAG_NAME, 'body'))  # 等待頁面主體加載
@@ -85,17 +84,12 @@ def search():
                 # 提取這些連結的 href 值
                 for link in links:
                     try:
-                        href_value = link.get_attribute('href')
-                        print(f"Found link: {href_value}")
-                        print(link)
                         # 點擊該連結並等待新標籤頁打開
                         link.click()
-
                         # 動態等待新標籤頁打開後進行切換
                         WebDriverWait(driver, 10).until(
                             EC.number_of_windows_to_be(2)  # 等待新標籤頁打開（總標籤頁數應為2）
                         )
-
                         # 切換到新打開的標籤頁
                         windows = driver.window_handles  # 獲取所有標籤頁
                         driver.switch_to.window(windows[-1])  # 切換到最新的標籤頁
@@ -105,18 +99,22 @@ def search():
                         WebDriverWait(driver, 10).until(
                             EC.presence_of_element_located((By.TAG_NAME, 'body'))  # 確保新標籤頁主體加載
                         )
+
                         # 查找所有 href 包含 'view-attachment' 的 <a> 標籤
                         link_elements = driver.find_elements(By.XPATH, "//a[contains(@href, 'view-attachment')]")
-                        # 使用 href_value 的一部分來命名資料夾，並替換非法字元
-                        folder_name = href_value.split("/")[-1].replace("?", "_").replace("=", "_")
-                        # 打印找到的元素數量    
+                        folder_name = link.text
                         folder_path = folder(folder_name)
-                        print(f"Found {len(link_elements)} elements with 'view-attachment' in href.")
+                        #print(f"Found {len(link_elements)} elements with 'view-attachment' in href.")
                         
-                        # 打印這些元素的 href 屬性
-                        for pdf_link in link_elements:
-                            print(f"Attachment Link: {pdf_link.get_attribute('href')}")
-                            download_pdf(pdf_link, folder_path)
+                        # 替換 for pdf_link in link_elements: 這一行
+                        for pdf_element in link_elements:
+                            pdf_link = pdf_element.get_attribute('href')  # 提取 href 屬性（連結的 URL 字串）
+                            #print(pdf_link)
+                                    # 滾動頁面以確保所有鏈接被加載
+                            #driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+                            #time.sleep(1)
+                            download_pdf(pdf_link, folder_path)  # 傳遞 URL 字串給 download_pdf 函數
+
                         # 操作新標籤頁後關閉它，並返回原始標籤頁
                         driver.close()
                         driver.switch_to.window(windows[0])  # 切回到原標籤頁
