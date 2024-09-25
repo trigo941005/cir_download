@@ -52,20 +52,22 @@ def search():
         for index, element in enumerate(elements):
             try:
                 # 點擊當前元素
+                print(element.text)
                 element.click()
-                # 等待頁面主體重新加載
-                WebDriverWait(driver, 10).until(
-                    EC.presence_of_element_located((By.TAG_NAME, 'body'))  # 等待頁面主體加載
-                )
+                # 等待頁面主體重新加
+                time.sleep(3)
 
                 # 找出所有帶有 target="_blank" 的 <a> 標籤
                 links = driver.find_elements(By.XPATH, '//a[@target="_blank"]')
-
                 # 提取這些連結的 href 值
-                for link in links:
+                time.sleep(1)
+                print(links)
+                for i in range(len(links)):
                     try:
+                        link = links[i]
                         # 點擊該連結並等待新標籤頁打開
-                        print(link.text)
+                        print(link)
+                        print(len(links))
                         folder_name = link.text
                         link.click()
                         # 動態等待新標籤頁打開後進行切換
@@ -98,6 +100,9 @@ def search():
                         
                     except StaleElementReferenceException:
                         print("StaleElementReferenceException: 重新查找超連結元素")
+                        target = driver.find_elements(By.XPATH, '//a[@target="_blank"]')
+                        
+                        print(target[1])
                         continue  # 如果元素已經無效，則跳過繼續下個元素
 
             except (NoSuchElementException, TimeoutException) as e:
