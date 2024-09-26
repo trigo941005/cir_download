@@ -52,8 +52,6 @@ def search():
                     EC.presence_of_all_elements_located((By.XPATH, '//a[@target="_blank"]'))
                 )
                 
-                print(links)
-                
                 for i in range(len(links)):
                     try:
                         link = links[i]
@@ -84,12 +82,13 @@ def search():
 
                         driver.close()
                         driver.switch_to.window(windows[0])
-
+                        if i > 4:
+                            break
                     except StaleElementReferenceException:
                         print("StaleElementReferenceException: 重新查找元素")
                         links = driver.find_elements(By.XPATH, '//a[@target="_blank"]')
                         continue
-
+                    
             except (NoSuchElementException, TimeoutException) as e:
                 print(f"處理元素 {index + 1} 時發生錯誤: {e}")
                 continue
