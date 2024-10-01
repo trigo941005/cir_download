@@ -1,32 +1,30 @@
 # cir_download
 
-# 專案說明
+## 專案說明
+
+此專案使用 Python 的 Selenium 模組，從 Cosmetic Ingredient Review 網站爬取所有可用資料。由於該網站執行緩慢，將爬取次數限制為 6 次，下載後將資料依據爬取資訊儲存到對應的資料夾中。
 
 ## 技術關鍵字
 
-    selenium
-    time
-    request
-    os
-
-
-## 專案介紹
-
-    此專案使用python裡的selenium模組，從Cosmetic Ingredient Review這個網站爬取所有資料(但此網站執行緩慢，所以將執行次數調整成6次) 將資料下載下來後存儲到資料夾內，並將資料夾按照爬取資訊命名。
+- Selenium
+- Time
+- Requests
+- OS
 
 ## 功能
-    從Cosmetic Ingredient Review爬取資料
-    將資料下載並整理成資料夾
 
+- 爬取 Cosmetic Ingredient Review 網站資料
+- 下載報告並整理成資料夾
 
 ## 使用資料
 
-    此專案使用的數據包含Cosmetic Ingredient Review
+- [Cosmetic Ingredient Review](https://cir-reports.cir-safety.org/)
 
-## 環境要求
-Python 3.9.11
-selenium 4.24.0
+## 環境需求
+
+- Python 3.9.11
+- Selenium 4.24.0
 
 ## 資料來源
 
-    https://cir-reports.cir-safety.org/(Cosmetic Ingredient Review)
+- [Cosmetic Ingredient Review](https://cir-reports.cir-safety.org/)
